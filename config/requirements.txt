@@ -1,0 +1,4 @@
+Flask
+Requests
+
+git+git://github.com/Brown-University-Library/borrowdirect.py@0.6-dev
