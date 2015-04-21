@@ -6,7 +6,7 @@
         bdpyweb_code/
             config/
             bdpyweb_app.py
-        env_bdpy/
+        env_bdpyweb/
      """
 
 import os, pprint, sys
@@ -16,7 +16,7 @@ import os, pprint, sys
 current_directory = os.path.dirname( os.path.abspath(__file__) )
 
 ## vars
-ACTIVATE_FILE = os.path.abspath( u'%s/../../env_bdpy/bin/activate_this.py' % current_directory )
+ACTIVATE_FILE = os.path.abspath( u'%s/../../env_bdpyweb/bin/activate_this.py' % current_directory )
 PROJECT_DIR = os.path.abspath( u'%s/../../bdpyweb_code' % current_directory )
 PROJECT_ENCLOSING_DIR = os.path.abspath( u'%s/../..' % current_directory )
 SITE_PACKAGES_DIR = os.path.abspath( u'%s/../../env_bdpyweb/lib/python2.6/site-packages' % current_directory )

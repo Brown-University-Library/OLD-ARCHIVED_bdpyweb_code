@@ -2,18 +2,27 @@
 
 import datetime, json, os, pprint
 import flask
-from bdpyweb_app.utils import logger_setup
+from bdpyweb_code.utils import log_helper
 
 
 app = flask.Flask(__name__)
-log = logger_setup.setup_logger()
+log = log_helper.setup_logger()
+
+
+@app.route( u'/', methods=['GET'] )  # /bdpyweb/v1/
+def root_redirect():
+    """ Redirects to versioned url. """
+    log.debug( u'- in bdpyweb_code.root_redirect(); starting' )
+    return flask.redirect( "./v1/", code=302 )
+    # return_dict = {u'a': u'b'}
+    # return flask.jsonify( return_dict )
 
 
 @app.route( u'/v1/', methods=['GET'] )  # /bdpyweb/v1/
 def return_json():
-    """ Submits search or request & returns json results. """
-    log.debug( u'- in bdpyweb_app.return_json(); starting' )
-    return_dict[u'foo'] = u'bar'
+    """ Handles post & returns json results. """
+    log.debug( u'- in bdpyweb_code.return_json(); starting' )
+    return_dict = {u'foo': u'bar'}
     return flask.jsonify( return_dict )
 
 
