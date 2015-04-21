@@ -16,7 +16,7 @@ log = log_helper.setup_logger()
 @app.route( u'/', methods=[u'GET'] )  # /bdpyweb/v1/
 def root_redirect():
     """ Redirects to readme. """
-    log.debug( u'- in bdpyweb_code.root_redirect(); starting' )
+    log.debug( u'starting' )
     return flask.redirect( u'https://github.com/birkin/bdpyweb_code/blob/master/README.md', code=303 )
 
 
@@ -24,7 +24,7 @@ def root_redirect():
 @basic_auth.required
 def return_json():
     """ Handles post & returns json results. """
-    log.debug( u'- in bdpyweb_code.return_json(); starting' )
+    log.debug( u'starting' )
     return_dict = { u'foo': u'bar' }
     return flask.jsonify( return_dict )
 

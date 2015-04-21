@@ -5,7 +5,7 @@ Handles log setup.
 Assumes system's logrotate.
 """
 
-import datetime, logging, os
+import logging, os
 
 
 def setup_logger():
@@ -14,7 +14,7 @@ def setup_logger():
     LOG_DIR = unicode( os.environ.get(u'bdpyweb__LOG_DIR') )
     LOG_LEVEL = unicode( os.environ.get(u'bdpyweb__LOG_LEVEL') )
     filename = u'%s/bdpyweb.log' % LOG_DIR
-    formatter = logging.Formatter( u'[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s' )
+    formatter = logging.Formatter( u'[%(asctime)s] %(levelname)s | %(module)s -> %(funcName)s | ln %(lineno)d | %(message)s' )
     logger = logging.getLogger( __name__ )
     level_dict = { u'debug': logging.DEBUG, u'info':logging.INFO }
     logger.setLevel( level_dict[LOG_LEVEL] )
