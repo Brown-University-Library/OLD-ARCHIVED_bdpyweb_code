@@ -33,11 +33,15 @@ class Helper( object ):
 
     def do_lookup( self, params ):
         defaults = self.load_bdpy_defaults()
-        bd = BorrowDirect( defaults, self.logger )
+        bd = BorrowDirect( defaults )
+        bd.logger = self.logger
         bd.run_request_item( params[u'user_barcode'], 'ISBN', params[u'isbn'] )
         bdpy_result = bd.request_result
         self.logger.debug( u'bdpy_result, `%s`' % bdpy_result )
-        return result
+        return bdpy_result
+
+    def prep_response( self, bdpy_result_dct ):
+        return { u'time': unicode( datetime.datetime.now() ) }
 
     ##
 
@@ -45,10 +49,12 @@ class Helper( object ):
         """ Loads up non-changing bdpy defaults.
             Called by do_lookup() """
         defaults = {
-            u'UNIVERSITY_CODE' = unicode( os.environ[u'bdpyweb__BDPY_UNIVERSITY_CODE'] ),
-            u'API_ROOT_URL' = unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
-            u'PARTNERSHIP_ID' = unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
-            u'PICKUP_LOCATION' = unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
+            u'UNIVERSITY_CODE': unicode( os.environ[u'bdpyweb__BDPY_UNIVERSITY_CODE'] ),
+            u'API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
+            u'PARTNERSHIP_ID': unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
+            u'PICKUP_LOCATION': unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
+            # u'LOG_PATH': u'%s/bdpyweb.log' % unicode( os.environ[u'bdpyweb__LOG_DIR'] ),
+            # u'LOG_LEVEL': unicode(os.environ[u'bdpyweb__LOG_LEVEL']).upper(),
             }
         self.logger.debug( u'defaults, `%s`' % defaults )
         return defaults
