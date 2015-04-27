@@ -11,9 +11,6 @@ app = flask.Flask(__name__)
 app.config[u'BASIC_AUTH_USERNAME'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_USERNAME'] )
 app.config[u'BASIC_AUTH_PASSWORD'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_PASSWORD'] )
 basic_auth = BasicAuth( app )
-API_AUTHORIZATION_CODE = unicode( os.environ[u'bdpyweb__API_AUTHORIZATION_CODE'] )  # for v1
-API_IDENTITY = unicode( os.environ[u'bdpyweb__API_IDENTITY'] )  # for v1
-LEGIT_IPS = json.loads( unicode(os.environ[u'bdpyweb__LEGIT_IPS']))
 logger = log_helper.setup_logger()
 hlpr = Helper( logger )
 
@@ -29,6 +26,7 @@ def root_redirect():
 def handle_v1():
     """ Handles post & returns json results. """
     if hlpr.validate_request( flask.request.form ) == False:
+        logger.info( u'request invalid, returning 400' )
         flask.abort( 400 )  # `Bad Request`
     logger.debug( u'starting' )
     return_dict = { u'foo': u'bar' }
