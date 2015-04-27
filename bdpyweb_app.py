@@ -28,6 +28,8 @@ def root_redirect():
 @app.route( u'/v1/', methods=[u'GET'] )  # /bdpyweb/v1/
 def handle_v1():
     """ Handles post & returns json results. """
+    if hlpr.validate_request() == False:
+        flask.abort( 400 )  # `Bad Request`
     logger.debug( u'starting' )
     return_dict = { u'foo': u'bar' }
     return flask.jsonify( return_dict )

@@ -15,4 +15,7 @@ class Helper( object ):
         self.logger = logger
         self.logger.debug( u'helper initialized' )
 
+    def validate_request( self ):
+        return False
+
     # end class Helper()
