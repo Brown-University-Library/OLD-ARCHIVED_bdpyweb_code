@@ -7,6 +7,7 @@ Helper for bdpyweb_app.py
 import datetime, json, os
 import flask
 import requests
+from bdpy import BorrowDirect
 
 
 class Helper( object ):
@@ -15,6 +16,8 @@ class Helper( object ):
     def __init__( self, logger ):
         self.logger = logger
         self.logger.debug( u'helper initialized' )
+
+    ## main functions
 
     def validate_request( self, params ):
         """ Checks params, ip, & auth info; returns boolean.
@@ -27,6 +30,30 @@ class Helper( object ):
             validity = True
         self.logger.debug( u'validity, `%s`' % validity )
         return validity
+
+    def do_lookup( self, params ):
+        defaults = self.load_bdpy_defaults()
+        bd = BorrowDirect( defaults, self.logger )
+        bd.run_request_item( params[u'user_barcode'], 'ISBN', params[u'isbn'] )
+        bdpy_result = bd.request_result
+        self.logger.debug( u'bdpy_result, `%s`' % bdpy_result )
+        return result
+
+    ##
+
+    def load_bdpy_defaults( self ):
+        """ Loads up non-changing bdpy defaults.
+            Called by do_lookup() """
+        defaults = {
+            u'UNIVERSITY_CODE' = unicode( os.environ[u'bdpyweb__BDPY_UNIVERSITY_CODE'] ),
+            u'API_ROOT_URL' = unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
+            u'PARTNERSHIP_ID' = unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
+            u'PICKUP_LOCATION' = unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
+            }
+        self.logger.debug( u'defaults, `%s`' % defaults )
+        return defaults
+
+    ## helper functions
 
     def check_keys( self, params ):
         """ Checks required keys; returns boolean.
