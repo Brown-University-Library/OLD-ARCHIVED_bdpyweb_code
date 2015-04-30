@@ -32,6 +32,8 @@ class Helper( object ):
         return validity
 
     def do_lookup( self, params ):
+        """ Runs lookup; returns bdpy output.
+            Called by bdpyweb_app.handle_v1() """
         defaults = self.load_bdpy_defaults()
         bd = BorrowDirect( defaults, self.logger )
         bd.run_request_item( params[u'user_barcode'], 'ISBN', params[u'isbn'] )
@@ -40,7 +42,13 @@ class Helper( object ):
         return bdpy_result
 
     def prep_response( self, bdpy_result_dct ):
-        return { u'time': unicode( datetime.datetime.now() ) }
+        """ Prepares webapp response.
+            Called by bdpyweb_app.handle_v1() """
+        response_dct = {
+            u'request': u'time': unicode( datetime.datetime.now() ),
+            u'response': bdpy_result_dct
+            }
+        return response_dct
 
     ##
 
