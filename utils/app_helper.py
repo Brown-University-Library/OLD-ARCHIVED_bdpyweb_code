@@ -45,7 +45,7 @@ class Helper( object ):
         """ Prepares webapp response.
             Called by bdpyweb_app.handle_v1() """
         response_dct = {
-            u'request': u'time': unicode( datetime.datetime.now() ),
+            u'request': {u'time': unicode( datetime.datetime.now() )},
             u'response': bdpy_result_dct
             }
         return response_dct
