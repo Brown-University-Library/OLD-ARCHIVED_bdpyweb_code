@@ -33,8 +33,7 @@ class Helper( object ):
 
     def do_lookup( self, params ):
         defaults = self.load_bdpy_defaults()
-        bd = BorrowDirect( defaults )
-        bd.logger = self.logger
+        bd = BorrowDirect( defaults, self.logger )
         bd.run_request_item( params[u'user_barcode'], 'ISBN', params[u'isbn'] )
         bdpy_result = bd.request_result
         self.logger.debug( u'bdpy_result, `%s`' % bdpy_result )
@@ -53,8 +52,6 @@ class Helper( object ):
             u'API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
             u'PARTNERSHIP_ID': unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
             u'PICKUP_LOCATION': unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
-            # u'LOG_PATH': u'%s/bdpyweb.log' % unicode( os.environ[u'bdpyweb__LOG_DIR'] ),
-            # u'LOG_LEVEL': unicode(os.environ[u'bdpyweb__LOG_LEVEL']).upper(),
             }
         self.logger.debug( u'defaults, `%s`' % defaults )
         return defaults
