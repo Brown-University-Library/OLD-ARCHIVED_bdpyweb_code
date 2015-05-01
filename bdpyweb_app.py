@@ -23,8 +23,8 @@ def root_redirect():
 
 
 @app.route( u'/v1', methods=[u'POST'] )  # /bdpyweb/v1/
-def handle_v1():
-    """ Handles post & returns json results. """
+def handle_ezb_v1():
+    """ Handles post from easyborrow & returns json results. """
     logger.debug( u'starting' )
     if hlpr.validate_request( flask.request.form ) == False:
         logger.info( u'request invalid, returning 400' )
@@ -35,23 +35,10 @@ def handle_v1():
     return flask.jsonify( interpreted_response_dct )
 
 
-# @app.route( u'/v1', methods=[u'POST'] )  # /bdpyweb/v1/
-# def handle_v1():
-#     """ Handles post & returns json results. """
-#     logger.debug( u'starting' )
-#     if hlpr.validate_request( flask.request.form ) == False:
-#         logger.info( u'request invalid, returning 400' )
-#         flask.abort( 400 )  # `Bad Request`
-#     result_data = hlpr.do_lookup( flask.request.form )
-#     response_dct = hlpr.prep_response( result_data )
-#     logger.debug( u'response_dct, `%s`' % response_dct )
-#     return flask.jsonify( response_dct )
-
-
-@app.route( u'/v2/', methods=[u'GET'] )  # /bdpyweb/v2/
+@app.route( u'/form/', methods=[u'GET', u'POST'] )  # /bdpyweb/form/
 @basic_auth.required
-def handle_v2():
-    """ Handles post & returns json results. """
+def handle_form():
+    """ Displays form on get, and outputs json on post. """
     logger.debug( u'starting' )
     return_dict = { u'foo': u'bar' }
     return flask.jsonify( return_dict )
