@@ -30,9 +30,22 @@ def handle_v1():
         logger.info( u'request invalid, returning 400' )
         flask.abort( 400 )  # `Bad Request`
     result_data = hlpr.do_lookup( flask.request.form )
-    response_dct = hlpr.prep_response( result_data )
-    logger.debug( u'response_dct, `%s`' % response_dct )
-    return flask.jsonify( response_dct )
+    interpreted_response_dct = hlpr.interpret_result( result_data )
+    logger.debug( u'returning response' )
+    return flask.jsonify( interpreted_response_dct )
+
+
+# @app.route( u'/v1', methods=[u'POST'] )  # /bdpyweb/v1/
+# def handle_v1():
+#     """ Handles post & returns json results. """
+#     logger.debug( u'starting' )
+#     if hlpr.validate_request( flask.request.form ) == False:
+#         logger.info( u'request invalid, returning 400' )
+#         flask.abort( 400 )  # `Bad Request`
+#     result_data = hlpr.do_lookup( flask.request.form )
+#     response_dct = hlpr.prep_response( result_data )
+#     logger.debug( u'response_dct, `%s`' % response_dct )
+#     return flask.jsonify( response_dct )
 
 
 @app.route( u'/v2/', methods=[u'GET'] )  # /bdpyweb/v2/

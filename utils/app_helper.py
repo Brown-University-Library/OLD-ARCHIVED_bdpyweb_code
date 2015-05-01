@@ -17,7 +17,7 @@ class Helper( object ):
         self.logger = logger
         self.logger.debug( u'helper initialized' )
 
-    ## main functions
+    ## main functions (called by bdpyweb_app.py functions)
 
     def validate_request( self, params ):
         """ Checks params, ip, & auth info; returns boolean.
@@ -41,16 +41,21 @@ class Helper( object ):
         self.logger.debug( u'bdpy_result, `%s`' % bdpy_result )
         return bdpy_result
 
-    def prep_response( self, bdpy_result_dct ):
-        """ Prepares webapp response.
-            Called by bdpyweb_app.handle_v1() """
-        response_dct = {
-            u'request': {u'time': unicode( datetime.datetime.now() )},
-            u'response': bdpy_result_dct
-            }
-        return response_dct
+    def interpret_result( self, bdpy_result ):
+        """ Examines api result and prepares response expected by easyborrow controller.
+            Called by bdpyweb_app.handle_v1()
+            Note: at the moment, it does not appear that the new BD api distinguishes between 'found' and 'requestable'. """
+        return_dct = {
+            u'search_result': u'FAILURE', u'bd_confirmation_code': None, u'found': False, u'requestable': False }
+        if u'RequestNumber' in bdpy_result.keys():
+            return_dct[u'search_result'] = u'SUCCESS'
+            return_dct[u'bd_confirmation_code'] = bdpy_result[u'RequestNumber']
+            return_dct[u'found'] = True
+            return_dct[u'requestable'] = True
+        self.logger.debug( u'interpreted result-dct, `%s`' % pprint.pformat(return_dct) )
+        return return_dct
 
-    ##
+    ## helper functions (called by above functions)
 
     def load_bdpy_defaults( self ):
         """ Loads up non-changing bdpy defaults.
@@ -63,8 +68,6 @@ class Helper( object ):
             }
         self.logger.debug( u'defaults, `%s`' % defaults )
         return defaults
-
-    ## helper functions
 
     def check_keys( self, params ):
         """ Checks required keys; returns boolean.
