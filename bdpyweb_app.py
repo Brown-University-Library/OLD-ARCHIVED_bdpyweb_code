@@ -11,6 +11,7 @@ from utils.app_helper import Helper
 app = flask.Flask(__name__)
 app.config[u'BASIC_AUTH_USERNAME'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_USERNAME'] )
 app.config[u'BASIC_AUTH_PASSWORD'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_PASSWORD'] )
+app.secret_key = os.urandom(24)
 basic_auth = BasicAuth( app )
 logger = log_helper.setup_logger()
 hlpr = Helper( logger )
@@ -41,14 +42,17 @@ def handle_ezb_v1():
 def handle_form_get():
     """ Displays isbn form on get. """
     logger.debug( u'starting' )
-    return_dict = { u'foo': u'bar' }
-    return render_template( 'form.html' )
+    logger.debug( u'session keys(), `%s`' % flask.session.keys() )
+    isbn = flask.session.get( u'isbn', None )
+    return render_template( 'form.html', isbn=isbn )
 
 
 @app.route( u'/form_handler/', methods=[u'POST'] )  # /bdpyweb/form_handler/
 def handle_form_post():
     """ Runs lookup, stores json to session, and redirects back to the form-page with a GET. """
     logger.debug( u'starting' )
+    logger.debug( u'isbn, `%s`' % flask.request.form[u'isbn'] )
+    flask.session[u'isbn'] = flask.request.form[u'isbn']
     return flask.redirect( u'/bdpyweb/form/' )
 
 
