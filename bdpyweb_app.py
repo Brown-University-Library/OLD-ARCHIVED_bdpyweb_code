@@ -14,7 +14,8 @@ app.config[u'BASIC_AUTH_PASSWORD'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_P
 app.secret_key = os.urandom(24)
 basic_auth = BasicAuth( app )
 logger = log_helper.setup_logger()
-hlpr = Helper( logger )
+ezb_helper = EzbHelper( logger )
+form_helper = FormHelper( logger )
 
 
 @app.route( u'/', methods=[u'GET'] )  # /bdpyweb
@@ -28,11 +29,11 @@ def root_redirect():
 def handle_ezb_v1():
     """ Handles post from easyborrow & returns json results. """
     logger.debug( u'starting' )
-    if hlpr.validate_request( flask.request.form ) == False:
+    if ezb_helper.validate_request( flask.request.form ) == False:
         logger.info( u'request invalid, returning 400' )
         flask.abort( 400 )  # `Bad Request`
-    result_data = hlpr.do_lookup( flask.request.form )
-    interpreted_response_dct = hlpr.interpret_result( result_data )
+    result_data = ezb_helper.do_lookup( flask.request.form )
+    interpreted_response_dct = ezb_helper.interpret_result( result_data )
     logger.debug( u'returning response' )
     return flask.jsonify( interpreted_response_dct )
 
@@ -51,8 +52,14 @@ def handle_form_get():
 def handle_form_post():
     """ Runs lookup, stores json to session, and redirects back to the form-page with a GET. """
     logger.debug( u'starting' )
-    logger.debug( u'isbn, `%s`' % flask.request.form[u'isbn'] )
-    flask.session[u'isbn'] = flask.request.form[u'isbn']
+    isbn = flask.request.form[u'isbn']
+    logger.debug( u'isbn, `%s`' % isbn )
+    flask.session[u'isbn'] = isbn
+    search_result = form_helper.run_search( isbn )
+    request_result = form_helper.run_request( isbn )
+    repsonse_dct = form_helper.build_response_dct( isbn, search_result, request_result )
+    jsn = json.dumps( repsonse_dct, sort_keys=True, indent=2 )
+    flask.session[u'jsn'] = jsn
     return flask.redirect( u'/bdpyweb/form/' )
 
 

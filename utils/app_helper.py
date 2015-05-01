@@ -10,12 +10,44 @@ import requests
 from bdpy import BorrowDirect
 
 
-class Helper( object ):
+class FormHelper( object ):
     """ Helper functions. """
 
     def __init__( self, logger ):
+        """ Helper functions for app->handle_form() """
         self.logger = logger
-        self.logger.debug( u'helper initialized' )
+        self.logger.debug( u'form_helper initialized' )
+
+    ## main functions
+
+    def run_search( self, isbn ):
+        defaults = self.load_bdpy_defaults()
+        pass
+
+    ## helper functions
+
+    def load_bdpy_defaults( self ):
+        """ Loads up non-changing bdpy defaults.
+            Called by do_lookup() """
+        defaults = {
+            u'UNIVERSITY_CODE': unicode( os.environ[u'bdpyweb__BDPY_UNIVERSITY_CODE'] ),
+            u'API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
+            u'PARTNERSHIP_ID': unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
+            u'PICKUP_LOCATION': unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
+            u'PATRON_BARCODE': unicode( os.environ[u'bdpyweb_app__BDPY_PATRON_BARCODE'] )
+            }
+        self.logger.debug( u'defaults, `%s`' % defaults )
+        return defaults
+
+    # end class FormHelper
+
+
+class EzbHelper( object ):
+    """ Helper functions for app->handle_ezb_v1() """
+
+    def __init__( self, logger ):
+        self.logger = logger
+        self.logger.debug( u'ezb_helper initialized' )
 
     ## main functions (called by bdpyweb_app.py functions)
 
