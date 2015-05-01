@@ -1,4 +1,85 @@
-<form method="POST" action="/bdpyweb/form_handler/">
-    <input type="text">
-    <input type="submit" value="Run Lookup">
-</form>
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <title>
+        bdpyweb - test form
+    </title>
+    <link href="//library.brown.edu/css_2011/BUL2011.css" rel="stylesheet" type="text/css" />
+    <!-- script below from http://code.google.com/p/css3-mediaqueries-js/ - forces earlier browsers to interpret CSS media queries -->
+    <script type="text/javascript" src="//library.brown.edu/scripts_2011/css3-mediaqueries.js"></script>
+    <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.js"></script>
+
+    <style type="text/css">
+        #enter {
+            margin-top: 6em;
+            margin-bottom: .5em; }
+        pre {
+            margin-top: 3em; }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <div id="header">
+            <p class="top_header_links">
+                <a href="http://library.brown.edu/libweb/proxy.php">Off-Campus Access</a> &nbsp;&nbsp;&#124;&nbsp;&nbsp;
+                <a href="http://library.brown.edu/libweb/atoz.php">Library A&ndash;Z</a> <!-- &nbsp;&nbsp;&#124;&nbsp;&nbsp; -->
+            </p>
+
+            <div class="BUhomelink">
+                <a href="http://www.brown.edu"><img src="//library.brown.edu/images/spacer.gif" width="50" alt="Brown University Homepage" title="Brown University Homepage" /></a>
+            </div>
+
+            <div class="BULhomelink">
+                <a href="http://library.brown.edu/"><img src="//library.brown.edu/images/spacer.gif" width="440" height="30" alt="Brown University Library Homepage" title="Brown University Library Homepage" /></a>
+            </div>
+
+        </div> <!-- end div#header -->
+
+        <div class="content-wrapper findit-core">
+
+            <div class="large-content findit-core">
+                <h3>bdpyweb</h3>
+
+                <div id="main_content" style="margin:2em;">
+
+                    <p id="enter">Enter isbn...</p>
+                    <form method="POST" action="/bdpyweb/form_handler/">
+                        <input type="text" name="isbn" value="">
+                        <input type="submit" value="Run Lookup">
+                    </form>
+
+                    <pre>{{ isbn }}</pre>
+
+                </div>
+
+            </div> <!-- end div.large-content findit-core -->
+
+        </div> <!-- end div.content-wrapper findit-core -->
+
+    </div> <!-- end div#wrapper -->
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
