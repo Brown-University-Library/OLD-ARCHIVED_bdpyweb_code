@@ -4,7 +4,7 @@
 Helper for bdpyweb_app.py
 """
 
-import datetime, json, os
+import datetime, json, os, pprint
 import flask
 import requests
 from bdpy import BorrowDirect
@@ -47,11 +47,12 @@ class Helper( object ):
             Note: at the moment, it does not appear that the new BD api distinguishes between 'found' and 'requestable'. """
         return_dct = {
             u'search_result': u'FAILURE', u'bd_confirmation_code': None, u'found': False, u'requestable': False }
-        if u'RequestNumber' in bdpy_result.keys():
-            return_dct[u'search_result'] = u'SUCCESS'
-            return_dct[u'bd_confirmation_code'] = bdpy_result[u'RequestNumber']
-            return_dct[u'found'] = True
-            return_dct[u'requestable'] = True
+        if u'Request' in bdpy_result.keys():
+            if u'RequestNumber' in bdpy_result[u'Request'].keys():
+                return_dct[u'search_result'] = u'SUCCESS'
+                return_dct[u'bd_confirmation_code'] = bdpy_result[u'Request'][u'RequestNumber']
+                return_dct[u'found'] = True
+                return_dct[u'requestable'] = True
         self.logger.debug( u'interpreted result-dct, `%s`' % pprint.pformat(return_dct) )
         return return_dct
 
