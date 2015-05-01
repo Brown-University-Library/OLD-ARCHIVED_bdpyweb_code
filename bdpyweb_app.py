@@ -4,7 +4,9 @@ import datetime, json, os, pprint
 import flask
 from bdpyweb_code.utils import log_helper
 from flask.ext.basicauth import BasicAuth  # http://flask-basicauth.readthedocs.org/en/latest/
+from flask.views import MethodView
 from utils.app_helper import Helper
+
 
 
 app = flask.Flask(__name__)
@@ -35,12 +37,20 @@ def handle_ezb_v1():
     return flask.jsonify( interpreted_response_dct )
 
 
-@app.route( u'/form/', methods=[u'GET', u'POST'] )  # /bdpyweb/form/
+@app.route( u'/form/', methods=[u'GET'] )  # /bdpyweb/form/
 @basic_auth.required
-def handle_form():
+def handle_form_get():
     """ Displays form on get, and outputs json on post. """
     logger.debug( u'starting' )
     return_dict = { u'foo': u'bar' }
+    return flask.jsonify( return_dict )
+
+@app.route( u'/form_handler/', methods=[u'POST'] )  # /bdpyweb/form_handler/
+def handle_form_post():
+    """ Displays form on get, and outputs json on post. """
+    logger.debug( u'starting' )
+
+    return_dict = { u'fooo': u'barr' }
     return flask.jsonify( return_dict )
 
 
