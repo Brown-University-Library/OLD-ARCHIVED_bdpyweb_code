@@ -45,7 +45,8 @@ def handle_form_get():
     logger.debug( u'starting' )
     logger.debug( u'session keys(), `%s`' % flask.session.keys() )
     isbn = flask.session.get( u'isbn', None )
-    return render_template( 'form.html', isbn=isbn )
+    result_jsn = flask.session.get( u'result_jsn' )
+    return render_template( u'form.html', data={u'result_jsn': result_jsn, u'isbn': isbn} )
 
 
 @app.route( u'/form_handler/', methods=[u'POST'] )  # /bdpyweb/form_handler/
@@ -60,7 +61,7 @@ def handle_form_post():
     request_result = form_helper.run_request( isbn )
     repsonse_dct = form_helper.build_response_dct( isbn, search_result, request_result, now )
     jsn = json.dumps( repsonse_dct, sort_keys=True, indent=2 )
-    flask.session[u'jsn'] = jsn
+    flask.session[u'result_jsn'] = jsn
     return flask.redirect( u'/bdpyweb/form/' )
 
 

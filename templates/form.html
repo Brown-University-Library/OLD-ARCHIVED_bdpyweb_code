@@ -58,11 +58,11 @@
 
                     <p id="enter">Enter isbn...</p>
                     <form method="POST" action="/bdpyweb/form_handler/">
-                        <input type="text" name="isbn" value="">
+                        <input type="text" name="isbn" value="{{ data.isbn }}">
                         <input type="submit" value="Run Lookup">
                     </form>
 
-                    <pre>{{ isbn }}</pre>
+                    <pre>{{ data.result_jsn }}</pre>
 
                 </div>
 
