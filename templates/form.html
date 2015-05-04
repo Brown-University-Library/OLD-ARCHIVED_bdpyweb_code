@@ -20,11 +20,17 @@
 
     <style type="text/css">
         #enter {
-            margin-top: 6em;
-            margin-bottom: .5em; }
+            font-size: 1.5em;
+            color: maroon;
+            margin-top: 3em;
+            margin-bottom: 1em; }
+        #pre_title {
+            font-size: 1.5em;
+            color: maroon;
+            margin-top: 3em;
+            margin-bottom: 1em }
         pre {
-            line-height: 1.6em;
-            margin-top: 3em; }
+            line-height: 1.6em; }
         }
     </style>
 
@@ -62,6 +68,8 @@
                         <input type="text" name="isbn" value="{{ data.isbn }}">
                         <input type="submit" value="Run Lookup">
                     </form>
+
+                    <h3 id="pre_title">BorrowDirect test-server api result...</h4>
 
                     <pre>{{ data.result_jsn }}</pre>
 
