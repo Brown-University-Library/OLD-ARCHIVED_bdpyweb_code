@@ -53,10 +53,13 @@ class FormHelper( object ):
         url = u'%s/%s/' % ( self.defaults[u'AVAILABILITY_API_URL_ROOT'], isbn )
         r = requests.get( url )
         dct = r.json()
+        items = dct[u'items']
+        for item in items:
+            for key in [u'is_available', u'requestable', u'barcode', u'callnumber']:
+                del item[key]
         return_dct = {
-            u'title': dct[u'response'][u'backend_response'][0][u'title'],
-            u'holdings': dct[u'response'][u'backend_response'][0][u'holdings_data']
-            }
+            u'title': dct[u'title'],
+            u'items': items }
         return return_dct
 
     def build_response_jsn( self, isbn, search_result, request_result, availability_api_data, start_time ):
