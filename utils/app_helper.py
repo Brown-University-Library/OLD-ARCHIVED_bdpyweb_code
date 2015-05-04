@@ -4,7 +4,7 @@
 Helper for bdpyweb_app.py
 """
 
-import datetime, json, os, pprint
+import datetime, json, os, pprint, time
 import flask
 import requests
 from bdpy import BorrowDirect
@@ -18,11 +18,12 @@ class FormHelper( object ):
         self.logger = logger
         self.logger.debug( u'form_helper initialized' )
         self.defaults = {
-            u'UNIVERSITY_CODE': unicode( os.environ[u'bdpyweb__BDPY_UNIVERSITY_CODE'] ),
-            u'API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
-            u'PARTNERSHIP_ID': unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
-            u'PICKUP_LOCATION': unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
-            u'PATRON_BARCODE': unicode( os.environ[u'bdpyweb__BDPY_PATRON_BARCODE'] )
+            u'UNIVERSITY_CODE': unicode( os.environ[u'bdpyweb__BDPYTEST_UNIVERSITY_CODE'] ),
+            u'API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPYTEST_API_ROOT_URL'] ),
+            u'PARTNERSHIP_ID': unicode( os.environ[u'bdpyweb__BDPYTEST_PARTNERSHIP_ID'] ),
+            u'PICKUP_LOCATION': unicode( os.environ[u'bdpyweb__BDPYTEST_PICKUP_LOCATION'] ),
+            u'PATRON_BARCODE': unicode( os.environ[u'bdpyweb__BDPYTEST_PATRON_BARCODE'] ),
+            u'AVAILABILITY_API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPYTEST_AVAILABILITY_API_URL_ROOT'] )
             }
 
     ## main functions
@@ -30,21 +31,40 @@ class FormHelper( object ):
     def run_search( self, isbn ):
         """ Hits test-server with search & returns output.
             Called by bdpyweb_app.handle_form_post() """
-        return { u'aa': 1 }
+        bd = BorrowDirect( self.defaults, self.logger )
+        bd.run_search( self.defaults[u'PATRON_BARCODE'], u'ISBN', isbn )
+        bdpy_result = bd.search_result
+        return bdpy_result
 
     def run_request( self, isbn ):
         """ Hits test-server with request & returns output.
             Called by bdpyweb_app.handle_form_post() """
-        return { u'bb': 2 }
+        time.sleep( 1 )
+        bd = BorrowDirect( self.defaults, self.logger )
+        bd.run_request_item( self.defaults[u'PATRON_BARCODE'], u'ISBN', isbn )
+        bdpy_result = bd.request_result
+        return bdpy_result
 
-    def build_response_jsn( self, isbn, search_result, request_result, start_time ):
+    def hit_availability_api( self, isbn ):
+        """ Hits hit_availability_api for holdings data.
+            Called by bdpyweb_app.handle_form_post() """
+        url = u'%s/%s/' % ( self.defaults[u'AVAILABILITY_API_URL_ROOT'], isbn )
+        r = requests.get( url )
+        dct = r.json()
+        return_dct = {
+            u'title': dct[u'response'][u'backend_response'][0][u'title'],
+            u'holdings': dct[u'response'][u'backend_response'][0][u'holdings_data']
+            }
+        return return_dct
+
+    def build_response_jsn( self, isbn, search_result, request_result, availability_api_data, start_time ):
         """ Prepares response data.
             Called by bdpyweb_app.handle_form_post() """
         end_time = datetime.datetime.now()
         response_dct = {
-            u'request': {
-                u'datetime': unicode(start_time), u'isbn': isbn },
+            u'request': { u'datetime': unicode(start_time), u'isbn': isbn },
             u'response': {
+                u'availability_api_data': availability_api_data,
                 u'bd_api_testserver_search_result': search_result,
                 u'bd_api_testserver_request_result': request_result,
                 u'time_taken': unicode( end_time - start_time ) }

@@ -55,12 +55,11 @@ def handle_form_post():
     now = datetime.datetime.now()
     logger.debug( u'starting' )
     isbn = flask.request.form[u'isbn']
-    logger.debug( u'isbn, `%s`' % isbn )
     flask.session[u'isbn'] = isbn
     search_result = form_helper.run_search( isbn )
     request_result = form_helper.run_request( isbn )
-    repsonse_jsn = form_helper.build_response_jsn( isbn, search_result, request_result, now )
-    # jsn = json.dumps( repsonse_dct, sort_keys=True, indent=4 )
+    availability_api_data = form_helper.hit_availability_api( isbn )
+    repsonse_jsn = form_helper.build_response_jsn( isbn, search_result, request_result, availability_api_data, now )
     flask.session[u'result_jsn'] = repsonse_jsn
     return flask.redirect( u'/bdpyweb/form/' )
 
