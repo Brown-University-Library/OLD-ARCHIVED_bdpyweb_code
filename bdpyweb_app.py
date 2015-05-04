@@ -59,9 +59,9 @@ def handle_form_post():
     flask.session[u'isbn'] = isbn
     search_result = form_helper.run_search( isbn )
     request_result = form_helper.run_request( isbn )
-    repsonse_dct = form_helper.build_response_dct( isbn, search_result, request_result, now )
-    jsn = json.dumps( repsonse_dct, sort_keys=True, indent=2 )
-    flask.session[u'result_jsn'] = jsn
+    repsonse_jsn = form_helper.build_response_jsn( isbn, search_result, request_result, now )
+    # jsn = json.dumps( repsonse_dct, sort_keys=True, indent=4 )
+    flask.session[u'result_jsn'] = repsonse_jsn
     return flask.redirect( u'/bdpyweb/form/' )
 
 
