@@ -5,7 +5,7 @@ import flask
 from bdpyweb_code.utils import log_helper
 from flask import render_template
 from flask.ext.basicauth import BasicAuth  # http://flask-basicauth.readthedocs.org/en/latest/
-from utils.app_helper import Helper
+from utils.app_helper import EzbHelper, FormHelper
 
 
 app = flask.Flask(__name__)
@@ -51,13 +51,14 @@ def handle_form_get():
 @app.route( u'/form_handler/', methods=[u'POST'] )  # /bdpyweb/form_handler/
 def handle_form_post():
     """ Runs lookup, stores json to session, and redirects back to the form-page with a GET. """
+    now = datetime.datetime.now()
     logger.debug( u'starting' )
     isbn = flask.request.form[u'isbn']
     logger.debug( u'isbn, `%s`' % isbn )
     flask.session[u'isbn'] = isbn
     search_result = form_helper.run_search( isbn )
     request_result = form_helper.run_request( isbn )
-    repsonse_dct = form_helper.build_response_dct( isbn, search_result, request_result )
+    repsonse_dct = form_helper.build_response_dct( isbn, search_result, request_result, now )
     jsn = json.dumps( repsonse_dct, sort_keys=True, indent=2 )
     flask.session[u'jsn'] = jsn
     return flask.redirect( u'/bdpyweb/form/' )

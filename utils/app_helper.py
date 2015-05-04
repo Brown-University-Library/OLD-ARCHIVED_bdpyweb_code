@@ -17,27 +17,55 @@ class FormHelper( object ):
         """ Helper functions for app->handle_form() """
         self.logger = logger
         self.logger.debug( u'form_helper initialized' )
-
-    ## main functions
-
-    def run_search( self, isbn ):
-        defaults = self.load_bdpy_defaults()
-        pass
-
-    ## helper functions
-
-    def load_bdpy_defaults( self ):
-        """ Loads up non-changing bdpy defaults.
-            Called by do_lookup() """
-        defaults = {
+        self.defaults = {
             u'UNIVERSITY_CODE': unicode( os.environ[u'bdpyweb__BDPY_UNIVERSITY_CODE'] ),
             u'API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
             u'PARTNERSHIP_ID': unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
             u'PICKUP_LOCATION': unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
-            u'PATRON_BARCODE': unicode( os.environ[u'bdpyweb_app__BDPY_PATRON_BARCODE'] )
+            u'PATRON_BARCODE': unicode( os.environ[u'bdpyweb__BDPY_PATRON_BARCODE'] )
             }
-        self.logger.debug( u'defaults, `%s`' % defaults )
-        return defaults
+
+    ## main functions
+
+    def run_search( self, isbn ):
+        """ Hits test-server with search & returns output.
+            Called by bdpyweb_app.handle_form_post() """
+        return { u'aa': 1 }
+
+    def run_request( self, isbn ):
+        """ Hits test-server with request & returns output.
+            Called by bdpyweb_app.handle_form_post() """
+        return { u'bb': 2 }
+
+    def build_response_dct( self, isbn, search_result, request_result, start_time ):
+        """ Prepares response data.
+            Called by bdpyweb_app.handle_form_post() """
+        end_time = datetime.datetime.now()
+        response_dct = {
+            u'request': {
+                u'datetime': unicode(start_time), u'isbn': isbn },
+            u'response': {
+                u'bd_api_testserver_search_result': search_result,
+                u'bd_api_testserver_request_result': request_result,
+                u'time_taken': unicode( end_time - start_time ) }
+                }
+        self.logger.debug( u'response_dct, `%s`' % pprint.pformat(response_dct) )
+        return response_dct
+
+    ## helper functions
+
+    # def load_bdpy_defaults( self ):
+    #     """ Loads up non-changing bdpy defaults.
+    #         Called by do_lookup() """
+    #     defaults = {
+    #         u'UNIVERSITY_CODE': unicode( os.environ[u'bdpyweb__BDPY_UNIVERSITY_CODE'] ),
+    #         u'API_URL_ROOT': unicode( os.environ[u'bdpyweb__BDPY_API_ROOT_URL'] ),
+    #         u'PARTNERSHIP_ID': unicode( os.environ[u'bdpyweb__BDPY_PARTNERSHIP_ID'] ),
+    #         u'PICKUP_LOCATION': unicode( os.environ[u'bdpyweb__BDPY_PICKUP_LOCATION'] ),
+    #         u'PATRON_BARCODE': unicode( os.environ[u'bdpyweb__BDPY_PATRON_BARCODE'] )
+    #         }
+    #     self.logger.debug( u'defaults, `%s`' % defaults )
+    #     return defaults
 
     # end class FormHelper
 
