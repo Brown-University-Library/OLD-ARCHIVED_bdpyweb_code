@@ -34,6 +34,8 @@ class FormHelper( object ):
         bd = BorrowDirect( self.defaults, self.logger )
         bd.run_search( self.defaults[u'PATRON_BARCODE'], u'ISBN', isbn )
         bdpy_result = bd.search_result
+        if bdpy_result.get( u'Item', None ) and bdpy_result[u'Item'].get( u'AuthorizationId', None ):
+            bdpy_result[u'Item'][u'AuthorizationId'] = u'(hidden)'
         return bdpy_result
 
     def run_request( self, isbn ):
