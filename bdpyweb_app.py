@@ -59,8 +59,9 @@ def handle_form_post():
     search_result = form_helper.run_search( isbn )
     request_result = form_helper.run_request( isbn )
     availability_api_data = form_helper.hit_availability_api( isbn )
-    repsonse_jsn = form_helper.build_response_jsn( isbn, search_result, request_result, availability_api_data, now )
-    flask.session[u'result_jsn'] = repsonse_jsn
+    response_jsn = form_helper.build_response_jsn( isbn, search_result, request_result, availability_api_data, now )
+    flask.session[u'result_jsn'] = response_jsn
+    flask.session.modified = True
     return flask.redirect( u'/bdpyweb/form/' )
 
 
