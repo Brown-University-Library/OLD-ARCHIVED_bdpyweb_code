@@ -11,7 +11,7 @@ from utils.app_helper import EzbHelper, FormHelper
 app = flask.Flask(__name__)
 app.config[u'BASIC_AUTH_USERNAME'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_USERNAME'] )
 app.config[u'BASIC_AUTH_PASSWORD'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_PASSWORD'] )
-app.secret_key = os.urandom(24)
+app.secret_key = unicode( os.environ[u'bdpyweb__SECRET_KEY'] )
 basic_auth = BasicAuth( app )
 logger = log_helper.setup_logger()
 ezb_helper = EzbHelper( logger )
