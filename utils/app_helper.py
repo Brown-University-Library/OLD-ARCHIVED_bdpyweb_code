@@ -58,7 +58,7 @@ class FormHelper( object ):
             for key in [u'is_available', u'requestable', u'barcode', u'callnumber']:
                 del item[key]
         return_dct = {
-            u'title': dct[u'title'],
+            u'title': dct.get( u'title', None ),
             u'items': items }
         return return_dct
 
@@ -169,8 +169,8 @@ class EzbHelper( object ):
         API_AUTHORIZATION_CODE = unicode( os.environ[u'bdpyweb__API_AUTHORIZATION_CODE'] )  # for v1
         API_IDENTITY = unicode( os.environ[u'bdpyweb__API_IDENTITY'] )  # for v1
         auth_good = False
-        if params.get(u'api_authorization_code', u'nope') == API_AUTHORIZATION_CODE:
-            if params.get(u'api_identity', u'nope') == API_IDENTITY:
+        if params.get( u'api_authorization_code', u'nope' ) == API_AUTHORIZATION_CODE:
+            if params.get( u'api_identity', u'nope' ) == API_IDENTITY:
                 auth_good = True
         self.logger.debug( u'auth_good, `%s`' % auth_good )
         return auth_good
