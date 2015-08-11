@@ -1,5 +1,4 @@
 Flask==0.10.1
 Flask-BasicAuth==0.2.0
-requests==2.6.0
 
-git+https://github.com/Brown-University-Library/borrowdirect.py@0.8-dev
+git+https://github.com/Brown-University-Library/borrowdirect.py@0.9
