@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import datetime, json, os, pprint
 import flask
 from bdpyweb_code.utils import log_helper

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 """ Prepares application environment.
     Variables assume project setup like:
     some_enclosing_directory/
