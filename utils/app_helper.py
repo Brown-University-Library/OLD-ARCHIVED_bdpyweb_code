@@ -162,6 +162,8 @@ class EzbHelper( object ):
         ip_good = False
         if flask.request.remote_addr in LEGIT_IPS:
             ip_good = True
+        else:
+            self.logger.debug( 'bad ip, `%s`' % flask.request.remote_addr )
         self.logger.debug( 'ip_good, `%s`' % ip_good )
         return ip_good
 
