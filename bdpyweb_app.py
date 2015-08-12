@@ -11,66 +11,66 @@ from utils.app_helper import EzbHelper, FormHelper
 
 
 app = flask.Flask(__name__)
-app.config[u'BASIC_AUTH_USERNAME'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_USERNAME'] )
-app.config[u'BASIC_AUTH_PASSWORD'] = unicode( os.environ[u'bdpyweb__BASIC_AUTH_PASSWORD'] )
-app.secret_key = unicode( os.environ[u'bdpyweb__SECRET_KEY'] )
+app.config['BASIC_AUTH_USERNAME'] = unicode( os.environ['bdpyweb__BASIC_AUTH_USERNAME'] )
+app.config['BASIC_AUTH_PASSWORD'] = unicode( os.environ['bdpyweb__BASIC_AUTH_PASSWORD'] )
+app.secret_key = unicode( os.environ['bdpyweb__SECRET_KEY'] )
 basic_auth = BasicAuth( app )
 logger = log_helper.setup_logger()
 ezb_helper = EzbHelper( logger )
 form_helper = FormHelper( logger )
 
 
-@app.route( u'/', methods=[u'GET'] )  # /bdpyweb
+@app.route( '/', methods=['GET'] )  # /bdpyweb
 def root_redirect():
     """ Redirects to readme. """
-    logger.debug( u'starting' )
-    return flask.redirect( u'https://github.com/birkin/bdpyweb_code/blob/master/README.md', code=303 )
+    logger.debug( 'starting' )
+    return flask.redirect( 'https://github.com/birkin/bdpyweb_code/blob/master/README.md', code=303 )
 
 
-@app.route( u'/v1', methods=[u'POST'] )  # /bdpyweb/v1/
+@app.route( '/v1', methods=['POST'] )  # /bdpyweb/v1/
 def handle_ezb_v1():
     """ Handles post from easyborrow & returns json results. """
-    logger.debug( u'starting' )
+    logger.debug( 'starting' )
     if ezb_helper.validate_request( flask.request.form ) == False:
-        logger.info( u'request invalid, returning 400' )
+        logger.info( 'request invalid, returning 400' )
         flask.abort( 400 )  # `Bad Request`
     result_data = ezb_helper.do_lookup( flask.request.form )
     interpreted_response_dct = ezb_helper.interpret_result( result_data )
-    logger.debug( u'returning response' )
+    logger.debug( 'returning response' )
     return flask.jsonify( interpreted_response_dct )
 
 
-@app.route( u'/form/', methods=[u'GET'] )  # /bdpyweb/form/
+@app.route( '/form/', methods=['GET'] )  # /bdpyweb/form/
 @basic_auth.required
 def handle_form_get():
     """ Displays isbn form on get. """
-    logger.debug( u'starting' )
-    logger.debug( u'session keys(), `%s`' % flask.session.keys() )
-    isbn = flask.session.get( u'isbn', None )
-    result_jsn = flask.session.get( u'result_jsn' )
-    return render_template( u'form.html', data={u'result_jsn': result_jsn, u'isbn': isbn} )
+    logger.debug( 'starting' )
+    logger.debug( 'session keys(), `%s`' % flask.session.keys() )
+    isbn = flask.session.get( 'isbn', None )
+    result_jsn = flask.session.get( 'result_jsn' )
+    return render_template( 'form.html', data={'result_jsn': result_jsn, 'isbn': isbn} )
 
 
-@app.route( u'/form_handler/', methods=[u'POST'] )  # /bdpyweb/form_handler/
+@app.route( '/form_handler/', methods=['POST'] )  # /bdpyweb/form_handler/
 def handle_form_post():
     """ Runs lookup, stores json to session, and redirects back to the form-page with a GET. """
     now = datetime.datetime.now()
-    logger.debug( u'starting' )
-    isbn = flask.request.form[u'isbn']
-    flask.session[u'isbn'] = isbn
+    logger.debug( 'starting' )
+    isbn = flask.request.form['isbn']
+    flask.session['isbn'] = isbn
     search_result = form_helper.run_search( isbn )
     request_result = form_helper.run_request( isbn )
     availability_api_data = form_helper.hit_availability_api( isbn )
     response_jsn = form_helper.build_response_jsn( isbn, search_result, request_result, availability_api_data, now )
-    flask.session[u'result_jsn'] = response_jsn
+    flask.session['result_jsn'] = response_jsn
     flask.session.modified = True
-    return flask.redirect( u'/bdpyweb/form/' )
+    return flask.redirect( '/bdpyweb/form/' )
 
 
 
 
-if __name__ == u'__main__':
-    if os.getenv( u'DEVBOX' ) == u'true':
-        app.run( host=u'0.0.0.0', debug=True )
+if __name__ == '__main__':
+    if os.getenv( 'DEVBOX' ) == 'true':
+        app.run( host='0.0.0.0', debug=True )
     else:
         app.run()
