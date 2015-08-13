@@ -17,7 +17,7 @@ app.secret_key = unicode( os.environ['bdpyweb__SECRET_KEY'] )
 basic_auth = BasicAuth( app )
 logger = log_helper.setup_logger()
 ezb_helper = EzbHelper( logger )
-form_helper = FormHelper( logger )
+# form_helper = FormHelper( logger )
 
 
 @app.route( '/', methods=['GET'] )  # /bdpyweb
@@ -48,7 +48,8 @@ def handle_form_get():
     logger.debug( 'session keys(), `%s`' % flask.session.keys() )
     isbn = flask.session.get( 'isbn', None )
     result_jsn = flask.session.get( 'result_jsn' )
-    return render_template( 'form.html', data={'result_jsn': result_jsn, 'isbn': isbn} )
+    # return render_template( 'form.html', data={'result_jsn': result_jsn, 'isbn': isbn} )
+    return flask.jsonify( {'message': "form temporarily disabled because BorrowDirect has temporarily disabled it's api test-url"} )
 
 
 @app.route( '/form_handler/', methods=['POST'] )  # /bdpyweb/form_handler/
