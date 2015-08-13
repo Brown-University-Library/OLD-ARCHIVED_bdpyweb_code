@@ -23,8 +23,8 @@ PROJECT_DIR = os.path.abspath( '%s/../../bdpyweb_code' % current_directory )
 PROJECT_ENCLOSING_DIR = os.path.abspath( '%s/../..' % current_directory )
 SITE_PACKAGES_DIR = os.path.abspath( '%s/../../env_bdpyweb/lib/python2.7/site-packages' % current_directory )
 
-## virtualenv
-execfile( ACTIVATE_FILE, dict(__file__=ACTIVATE_FILE) )  # loads virtual env
+## load virtual env
+execfile( ACTIVATE_FILE, dict(__file__=ACTIVATE_FILE) )
 
 ## sys.path additions
 for entry in [PROJECT_DIR, PROJECT_ENCLOSING_DIR, SITE_PACKAGES_DIR]:
