@@ -40,9 +40,8 @@ class EzbHelper( object ):
         defaults = self.load_bdpy_defaults()
         bd = BorrowDirect( defaults, self.logger )
         bd.run_request_item( params['user_barcode'], 'ISBN', params['isbn'] )
-        bdpy_result = bd.request_result
-        self.logger.debug( 'bdpy_result, `%s`' % bdpy_result )
-        return bdpy_result
+        self.logger.debug( 'bd.request_result, `%s`' % bd.request_result )
+        return bd.request_result
 
     def interpret_result( self, bdpy_result ):
         """ Examines api result and prepares response expected by easyborrow controller.
@@ -50,12 +49,11 @@ class EzbHelper( object ):
             Note: at the moment, it does not appear that the new BD api distinguishes between 'found' and 'requestable'. """
         return_dct = {
             'search_result': 'FAILURE', 'bd_confirmation_code': None, 'found': False, 'requestable': False }
-        if 'Request' in bdpy_result.keys():
-            if 'RequestNumber' in bdpy_result['Request'].keys():
-                return_dct['search_result'] = 'SUCCESS'
-                return_dct['bd_confirmation_code'] = bdpy_result['Request']['RequestNumber']
-                return_dct['found'] = True
-                return_dct['requestable'] = True
+        if 'RequestNumber' in bdpy_result.keys():
+            return_dct['search_result'] = 'SUCCESS'
+            return_dct['bd_confirmation_code'] = bdpy_result['RequestNumber']
+            return_dct['found'] = True
+            return_dct['requestable'] = True
         self.logger.debug( 'interpreted result-dct, `%s`' % pprint.pformat(return_dct) )
         return return_dct
 
